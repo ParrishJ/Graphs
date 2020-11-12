@@ -132,6 +132,7 @@ class Graph:
         starting_vertex to destination_vertex in
         depth-first order.
         """
+        
         visited = set()
         stack = deque()
         stack.append([starting_vertex])
@@ -146,9 +147,13 @@ class Graph:
                 for neighbor in self.vertices[currentNode]:
                     newPath = list(currentPath)
                     newPath.append(neighbor)
-                    stack.append(newPath)
+                    stack.append(newPath) 
+            
+        
+        
 
     def dfs_recursive(self, starting_vertex, destination_vertex):
+        
         """
         Return a list containing a path from
         starting_vertex to destination_vertex in
@@ -156,7 +161,20 @@ class Graph:
 
         This should be done using recursion.
         """
-        pass  # TODO
+        visited = set()
+        def helper(currentPath, destination_vertex):
+            currentNode = currentPath[-1]
+
+            if currentNode == destination_vertex: 
+                return currentPath
+            if currentNode not in visited:
+                visited.add(currentNode)
+                print(currentNode)
+                for neighbor in self.vertices[currentNode]:
+                    newPath = list(currentPath)
+                    newPath.append(neighbor)
+                return helper(newPath, destination_vertex)
+        return helper([starting_vertex], destination_vertex) 
 
     def __repr__(self):
         print(f"{self.vertices}")
