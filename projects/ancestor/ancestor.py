@@ -17,7 +17,6 @@ will be the "parents" (the first number in each tuple). Once we have the graph i
 with some special checks in place to find the oldest ancestor. 
 
 """
-
 from collections import deque
 def earliest_ancestor(ancestors, starting_node):
 
