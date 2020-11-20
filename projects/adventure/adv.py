@@ -32,13 +32,77 @@ traversal_path = []
 #################################################################################################################################################################
 def traverse_rooms(player, world):
     visited_rooms = set()
-    
+    traversal_graph = {}
+    prev_room_id = None
+
     player.current_room = world.starting_room
     visited_rooms.add(player.current_room)
-    traversal_graph = {}
-    current_exits = player.current_room.get_exits()
+    #current_exits = player.current_room.get_exits()
+
+    def update_graph(player, traversal_path):
+        nonlocal prev_room_id 
+        visited_rooms.add(player.current_room)
+        current_exits = player.current_room.get_exits()
+
+        if len(traversal_path) > 0:
+            prev_direction = traversal_path[-1]
+
+        # Updates previous room on graph
+        if prev_room_id != None:
+            if traversal_graph[prev_room_id][prev_direction] == '?':
+                traversal_graph[prev_room_id][prev_direction] = player.current_room.id
+
+        #updats current room on graph
+        for current_exit in current_exits:
+            if player.current_room.id not in traversal_graph:
+                traversal_graph[player.current_room.id] = {current_exit: '?'}
+            else: 
+                if current_exit in traversal_graph[player.current_room.id]:
+                    continue
+                else: 
+                    traversal_graph[player.current_room.id][current_exit] = '?'
+        
+        prev_room_id = player.current_room.id
     
-    traversal_graph[player.current_room.id] = dict()
+    
+    update_graph(player, traversal_path)
+
+    new_direction = 'n'
+    traversal_path.append(new_direction)
+    player.travel(new_direction)
+    update_graph(player, traversal_path)
+
+    new_direction = 'n'
+    traversal_path.append(new_direction)
+    player.travel(new_direction)
+    update_graph(player, traversal_path)
+    print(traversal_graph)
+
+    new_direction = 's'
+    traversal_path.append(new_direction)
+    player.travel(new_direction)
+    update_graph(player, traversal_path)
+    print(traversal_graph)
+
+    new_direction = 's'
+    traversal_path.append(new_direction)
+    player.travel(new_direction)
+    update_graph(player, traversal_path)
+    print(traversal_graph)
+
+    
+
+    
+
+    #prev_direction = traversal_path[-1]
+
+    #current_exits = player.current_room.get_exits()
+    
+    #current_room_id = player.current_room.id
+    
+    #traversal_graph[player.current_room.id] = dict()
+
+    """ traversal_graph[player.current_room.id] = dict()
     for current_exit in current_exits:
         if traversal_graph[player.current_room.id] == {}:
             traversal_graph[player.current_room.id] = {current_exit: '?'}
@@ -46,21 +110,9 @@ def traverse_rooms(player, world):
             traversal_graph[player.current_room.id][current_exit] = '?'
     print('traversal graph 1 ##############################', traversal_graph)
 
-    prev_room_id = player.current_room.id
+    prev_room_id = player.current_room.id """
 
-    new_direction = 'n'
-    player.travel(new_direction)
-    traversal_path.append(new_direction)
-
-    prev_direction = traversal_path[-1]
-
-    current_exits = player.current_room.get_exits()
-    
-    current_room_id = player.current_room.id
-    
-    traversal_graph[player.current_room.id] = dict()
-
-    if traversal_graph[prev_room_id] != {}:
+    """ if traversal_graph[prev_room_id] != {}:
         if traversal_graph[prev_room_id][prev_direction] == '?':
             traversal_graph[prev_room_id][prev_direction] = player.current_room.id
 
@@ -68,8 +120,8 @@ def traverse_rooms(player, world):
         if traversal_graph[player.current_room.id] == {}:
             traversal_graph[player.current_room.id] = {current_exit: '?'}
         else: 
-            traversal_graph[current_room_id][current_exit] = '?'
-    print("traversal graph 2 !!!!!!!!!!!!!!!!!!!!!", traversal_graph)
+            traversal_graph[current_room_id][current_exit] = '?' """
+    
     """ print(f'********************************************************Curr Room {player.current_room}********************************************************')
     print(f'********************************************************Curr Exits {player.current_room.get_exits()}*******************************************')
     print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Traveled !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
