@@ -66,6 +66,46 @@ class SocialGraph:
             friendship = possible_friendships[i]
             self.add_friendship(friendship[0], friendship[1])
 
+    # class demo - linear time populate graph linear
+    def add_friendship_linear(self, user_id, friend_id):
+        # Returns True if user_id and friend_id have successfully been added as friends
+        if user_id == friend_id:
+            return False
+        # Check if friend_id and user_id are not already friends with each other
+        elif friend_id in self.friendships[user_id] or user_id in self.friendships[friend_id]:
+            return False
+        else:
+            self.friendships[user_id].add(friend_id)
+            self.friendships[friend_id].add(user_id)
+            return True
+
+
+
+    def populate_graph_linear(self, num_users, avg_friendships):
+        self.last_id = 0
+        self.users = {}
+        self.friendships = {}
+
+        # Add users (same as other graph)
+        for i in range(num_users):
+            self.add_user(f"User {i}")
+        
+        # Create rabdin friendships until we've hit the target number of friendships
+        target_friendships = num_users * avg_friendships
+        total_friendships = 0 
+        collisions = 0 
+
+        while total_friendships < target_friendships:
+            # keep adding friendships
+            user_id = random.randint(1, self.last_id)
+            friend_id = random.randint(1, self.last_id)
+            if self.add_friendship_linear(user_id, friend_id):
+                total_friendships += 2
+            else:
+                collisions += 1
+        print(f"Collisions: {collisions}")
+
+
     def get_all_social_paths(self, user_id):
         """
         Takes a user's user_id as an argument
@@ -114,12 +154,29 @@ class SocialGraph:
         """ visited[user_id] = visited
         return visited """
 
+    # Implementation from class
+    def get_all_social_paths_class_demo(self, user_id):
+        visited = {}
+        queue = deque()
+        queue.append([user_id])
+        while len(queue) > 0:
+            currPath = queue.popleft()
+            currNode = currPath[-1]
+            visited[currNode] = currPath
+            for friend in self.friendships[currNode]:
+                if friend not in visited:
+                    newPath = currPath.copy()
+                    newPath.append(friend)
+                    queue.append(newPath)
+        return visited
+
+
 
 if __name__ == '__main__':
     sg = SocialGraph()
-    sg.populate_graph(10, 2)
+    sg.populate_graph_linear(10, 2)
     print(sg.friendships)
-    connections = sg.get_all_social_paths(1)
+    connections = sg.get_all_social_paths_class_demo(1)
     print(connections)
 
 
@@ -137,7 +194,7 @@ network? What is the average degree of separation between a user and those in hi
 
 My understanting is that a simple formula presented by Watts and Strogatz (ln(number of nodes) / ln(edges per node)) can be used to find the average
 degees of separation here. When we use the numbers above, we get about 4.29 degrees of separation on average. Because each person has five friends
-which is more than the average degrees of separation here,  my understanding is that on average 100% of the users will be in each person's extended network.
+which is more than the average degrees of separation here, my understanding is that on average 100% of the users will be in each person's extended network.
 
 
 Citation for formula:

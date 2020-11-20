@@ -10,11 +10,11 @@ world = World()
 
 
 # You may uncomment the smaller graphs for development and testing purposes.
-# map_file = "maps/test_line.txt"
-# map_file = "maps/test_cross.txt"
-# map_file = "maps/test_loop.txt"
-# map_file = "maps/test_loop_fork.txt"
-map_file = "maps/main_maze.txt"
+map_file = "projects/adventure/maps/test_line.txt"
+# map_file = "projects/adventure/maps/test_cross.txt"
+# map_file = "projects/adventure/maps/test_loop.txt"
+# map_file = "projects/adventure/maps/test_loop_fork.txt"
+# map_file = "projects/adventure/maps/main_maze.txt"
 
 # Loads the map into a dictionary
 room_graph=literal_eval(open(map_file, "r").read())
@@ -29,12 +29,44 @@ player = Player(world.starting_room)
 # traversal_path = ['n', 'n']
 traversal_path = []
 
+#################################################################################################################################################################
+def traverse_rooms(player, world):
+    visited_rooms = set()
+    
+    player.current_room = world.starting_room
+    visited_rooms.add(player.current_room)
+    traversal_graph = {}
+    player.travel('n')
+    current_exits = player.current_room.get_exits()
+    current_room_id = player.current_room.id
+    #travesal_graph = { 0: {'n': '?', 's': '?', 'w': '?', 'e': '?'} }
+    traversal_graph[current_room_id] = dict()
+    for current_exit in current_exits:
+        if traversal_graph[current_room_id] == {}:
+            traversal_graph[current_room_id] = {current_exit: '?'}
+        else: 
+            traversal_graph[current_room_id][current_exit] = '?'
+        #print('exit', current_exit)
+    print('traversal graph ##############################', traversal_graph)
+    print(f'********************************************************Curr Room {player.current_room}********************************************************')
+    print(f'********************************************************Curr Exits {player.current_room.get_exits()}*******************************************')
+    
+    print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Traveled !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+    print(f'********************************************************Curr Room {player.current_room.id}********************************************************')
+    print(f'********************************************************Curr Exits {player.current_room.get_exits()}*******************************************')
+
+traverse_rooms(player, world)
+
+
+################################################################################################################################################################
+
 
 
 # TRAVERSAL TEST
 visited_rooms = set()
 player.current_room = world.starting_room
 visited_rooms.add(player.current_room)
+
 
 for move in traversal_path:
     player.travel(move)
@@ -51,7 +83,7 @@ else:
 #######
 # UNCOMMENT TO WALK AROUND
 #######
-player.current_room.print_room_description(player)
+""" player.current_room.print_room_description(player)
 while True:
     cmds = input("-> ").lower().split(" ")
     if cmds[0] in ["n", "s", "e", "w"]:
@@ -59,4 +91,4 @@ while True:
     elif cmds[0] == "q":
         break
     else:
-        print("I did not understand that command.")
+        print("I did not understand that command.") """
