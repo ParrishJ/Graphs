@@ -36,24 +36,48 @@ def traverse_rooms(player, world):
     player.current_room = world.starting_room
     visited_rooms.add(player.current_room)
     traversal_graph = {}
-    player.travel('n')
     current_exits = player.current_room.get_exits()
-    current_room_id = player.current_room.id
-    #travesal_graph = { 0: {'n': '?', 's': '?', 'w': '?', 'e': '?'} }
-    traversal_graph[current_room_id] = dict()
+    
+    traversal_graph[player.current_room.id] = dict()
     for current_exit in current_exits:
-        if traversal_graph[current_room_id] == {}:
-            traversal_graph[current_room_id] = {current_exit: '?'}
+        if traversal_graph[player.current_room.id] == {}:
+            traversal_graph[player.current_room.id] = {current_exit: '?'}
+        else: 
+            traversal_graph[player.current_room.id][current_exit] = '?'
+    print('traversal graph 1 ##############################', traversal_graph)
+
+    prev_room_id = player.current_room.id
+
+    new_direction = 'n'
+    player.travel(new_direction)
+    traversal_path.append(new_direction)
+
+    prev_direction = traversal_path[-1]
+
+    current_exits = player.current_room.get_exits()
+    
+    current_room_id = player.current_room.id
+    
+    traversal_graph[player.current_room.id] = dict()
+
+    if traversal_graph[prev_room_id] != {}:
+        if traversal_graph[prev_room_id][prev_direction] == '?':
+            traversal_graph[prev_room_id][prev_direction] = player.current_room.id
+
+    for current_exit in current_exits:
+        if traversal_graph[player.current_room.id] == {}:
+            traversal_graph[player.current_room.id] = {current_exit: '?'}
         else: 
             traversal_graph[current_room_id][current_exit] = '?'
-        #print('exit', current_exit)
-    print('traversal graph ##############################', traversal_graph)
-    print(f'********************************************************Curr Room {player.current_room}********************************************************')
+    print("traversal graph 2 !!!!!!!!!!!!!!!!!!!!!", traversal_graph)
+    """ print(f'********************************************************Curr Room {player.current_room}********************************************************')
     print(f'********************************************************Curr Exits {player.current_room.get_exits()}*******************************************')
-    
     print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Traveled !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
     print(f'********************************************************Curr Room {player.current_room.id}********************************************************')
-    print(f'********************************************************Curr Exits {player.current_room.get_exits()}*******************************************')
+    print(f'********************************************************Curr Exits {player.current_room.get_exits()}*******************************************') """
+    
+
+
 
 traverse_rooms(player, world)
 
@@ -63,7 +87,7 @@ traverse_rooms(player, world)
 
 
 # TRAVERSAL TEST
-visited_rooms = set()
+""" visited_rooms = set()
 player.current_room = world.starting_room
 visited_rooms.add(player.current_room)
 
@@ -76,7 +100,7 @@ if len(visited_rooms) == len(room_graph):
     print(f"TESTS PASSED: {len(traversal_path)} moves, {len(visited_rooms)} rooms visited")
 else:
     print("TESTS FAILED: INCOMPLETE TRAVERSAL")
-    print(f"{len(room_graph) - len(visited_rooms)} unvisited rooms")
+    print(f"{len(room_graph) - len(visited_rooms)} unvisited rooms") """
 
 
 
